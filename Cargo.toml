@@ -1,0 +1,7 @@
+[package]
+name = "llmender"
+description = "A rust cli application to fix ebook metadata with LLMs"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
