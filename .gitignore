@@ -24,3 +24,10 @@ target
 # Added by cargo
 
 /target
+
+# exclude models folder
+/models
+/tmp_models
+
+# exluding mise
+mise.toml

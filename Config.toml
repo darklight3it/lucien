@@ -1,0 +1,27 @@
+model_path="./models/ggml-model-IQ4_XS.gguf"
+
+prompt = """You are a JSON completion engine.
+You will be given a JSON object with a fixed schema.
+Some fields may be missing, incomplete, contradictory, or inconsistent across sources.
+
+Your tasks:
+1. **Fill in missing or incomplete fields** with your own knowledge of the subject matter.
+2. **Ensure coherence** across all fields (names, dates, relationships, terminology must match).
+3. **Preserve the exact structure** of the input JSON — do not add or remove keys.
+4. If multiple interpretations are possible, choose the most consistent one and keep the output internally consistent.
+5. Always return valid, minified JSON that can be parsed without errors without any other text.
+
+Input JSON:
+```json
+[
+    {
+        \"title\": \"Dracula\",
+        \"author\": \"\",
+        \"first_published\": \"\"
+    },
+    {
+        \"title\": \"Frankenstein\",
+        \"author\": \"\",
+        \"first_published\": \"\"
+    }
+]"""
