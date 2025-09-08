@@ -2,12 +2,12 @@
 set -e
 
 # ---------------------------
-# Configurations
+# Source Envs
 # ---------------------------
-MODEL_NAME="openbmb/MiniCPM-Llama3-V-2_5-gguf"
-MODEL_VERSION="ggml-model-IQ4_XS.gguf"
-MODEL_DIR="./models"
-TEMP_DIR="./tmp_models"
+
+set -a
+source .env
+set a
 
 # ---------------------------
 # Clean folders
