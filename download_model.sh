@@ -52,7 +52,7 @@ if [ "$1" == "--convert-to-gguf" ]; then
     # ---------------------------
     echo "🔄 Converting model to GGUF..."
 
-    python3 "$TEMP_DIR/llama.cpp/convert_hf_to_gguf.py" "$TEMP_DIR" --outfile "$MODEL_DIR/llama3-8B.gguf" --outtype q8_0
+    python3 "$TEMP_DIR/llama.cpp/convert_hf_to_gguf.py" "$TEMP_DIR" --outfile "$MODEL_DIR/$MODEL_NAME.gguf" --outtype q8_0
 fi
 
 # ---------------------------

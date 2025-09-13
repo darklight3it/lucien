@@ -1,5 +1,5 @@
 [package]
-name = "llmender"
+name = "lucien"
 description = "A rust cli application to fix ebook metadata with LLMs"
 version = "0.1.0"
 edition = "2024"
@@ -8,3 +8,6 @@ edition = "2024"
 config = "0.15.15"
 llama_cpp = "0.3.2"
 serde = { version = "1.0", features = ["derive"] }
+
+[dev-dependencies]
+mockall = "0.13.1"

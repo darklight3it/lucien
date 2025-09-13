@@ -6,8 +6,9 @@ mod ebook;
 mod llm;
 
 fn main() {
+    // load app configuration
     let settings = match app_config::load_config() {
-        Ok(cfg) => cfg, // return the AppConfig
+        Ok(cfg) => cfg,
         Err(e) => {
             panic!("Error loading config:{}", e);
         }

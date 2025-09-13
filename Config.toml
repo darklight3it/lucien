@@ -1,4 +1,5 @@
 model_path="./models/ggml-model-IQ4_XS.gguf"
+model_format="GUFF"
 
 prompt = """You are a JSON completion engine.
 You will be given a JSON object with a fixed schema.

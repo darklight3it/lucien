@@ -3,8 +3,14 @@ use serde::Deserialize;
 use std::path::PathBuf;
 
 #[derive(Deserialize, Debug)]
+pub enum ModelFormat {
+    GGUF,
+}
+
+#[derive(Deserialize, Debug)]
 pub struct AppConfig {
-    pub model_path: String,
+    pub model_path: PathBuf,
+    pub model_format: ModelFormat,
     pub prompt: String,
     pub metadata_index_path: PathBuf,
 }
