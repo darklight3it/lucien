@@ -2,12 +2,12 @@ use crate::app_config::{AppConfig, ModelFormat};
 use crate::llm::llama_model::load_llama;
 use crate::llm::traits::MetadataOptimizer;
 
-pub fn model_factory(app_config: AppConfig) -> Box<dyn MetadataOptimizer> {
-    let model = match app_config.model_format {
-        ModelFormat::GGUF => load_llama(app_config),
-    };
-
-    Box::new(model)
+pub fn model_factory(app_config: &AppConfig) -> Result<Box<dyn MetadataOptimizer>, String> {
+    match app_config.model_format {
+        ModelFormat::GGUF => load_llama(app_config)
+            .map(|model| Box::new(model) as Box<dyn MetadataOptimizer>)
+            .map_err(|e| e.to_string()),
+    }
 }
 
 #[cfg(test)]
@@ -18,7 +18,11 @@ mod tests {
     // Mocking the optimizer
     struct DummyOptimizer;
     impl MetadataOptimizer for DummyOptimizer {
-        fn optimize_metadata(&self) -> Result<String, String> {
+        fn optimize_metadata(
+            &self,
+            metadata: &String,
+            app_config: &AppConfig,
+        ) -> Result<String, String> {
             todo!()
         }
 

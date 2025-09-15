@@ -1,5 +1,6 @@
 model_path="./models/ggml-model-IQ4_XS.gguf"
-model_format="GUFF"
+model_format="GGUF"
+metadata_index_path=""
 
 prompt = """You are a JSON completion engine.
 You will be given a JSON object with a fixed schema.
@@ -13,16 +14,4 @@ Your tasks:
 5. Always return valid, minified JSON that can be parsed without errors without any other text.
 
 Input JSON:
-```json
-[
-    {
-        \"title\": \"Dracula\",
-        \"author\": \"\",
-        \"first_published\": \"\"
-    },
-    {
-        \"title\": \"Frankenstein\",
-        \"author\": \"\",
-        \"first_published\": \"\"
-    }
-]"""
+"""
