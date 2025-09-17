@@ -1,6 +1,5 @@
-use std::path::Path;
-
 use super::errors::EbookErrors;
+use std::path::Path;
 #[derive(Debug, PartialEq)]
 pub enum SupportedExtensions {
     EPub,
@@ -22,30 +21,79 @@ impl TryFrom<&Path> for SupportedExtensions {
     }
 }
 
+#[derive(Debug, PartialEq)]
+pub struct ISBN {
+    id: String,
+}
+
+impl ISBN {
+    pub const PREFIX: &'static str = "urn:isbn:";
+    fn new(raw: String) -> Self {
+        let id: String = raw
+            .strip_prefix(ISBN::PREFIX)
+            .unwrap_or(&raw)
+            .chars()
+            .filter(|c| c.is_ascii_digit() || *c == 'X') // allow X for ISBN-10
+            .collect();
+
+        return Self { id };
+    }
+
+    fn get_long_id(&self) -> String {
+        return format!("{}{}", ISBN::PREFIX, self.id);
+    }
+}
+
 #[cfg(test)]
-mod tests {
+mod test {
     use super::*;
 
     #[test]
+    fn test_isbn_constructor() {
+        assert_eq!(
+            "9781492056478",
+            ISBN::new("978-1-492-05647-8".to_string()).id
+        );
+
+        assert_eq!(
+            "9781492056478",
+            ISBN::new(format!("{}{}", ISBN::PREFIX, "978 - 1 - 492 - 05647 - 8")).id
+        );
+
+        assert_eq!(
+            "9781492056478",
+            ISBN::new("978-1-492-05647-8".to_string()).id
+        );
+
+        assert_eq!("0198526636", ISBN::new("0-19-852663-6".to_string()).id);
+        assert_eq!("019852663X", ISBN::new("0-19-852663-X".to_string()).id);
+
+        assert_eq!(
+            format!("{}{}", ISBN::PREFIX, "9781492056478"),
+            ISBN::new("978-1-492-05647-8".to_string()).get_long_id()
+        );
+    }
+
+    #[test]
     fn test_supported_extensions_try_form() {
-        assert_eq!(
-            Ok(SupportedExtensions::EPub),
-            SupportedExtensions::try_from(Path::new("/book.epub"))
-        );
+        assert!(matches!(
+            SupportedExtensions::try_from(Path::new("/book.epub")),
+            Ok(SupportedExtensions::EPub)
+        ));
 
-        assert_eq!(
-            Err(EbookErrors::NoExtensionError),
-            SupportedExtensions::try_from(Path::new("/book"))
-        );
+        assert!(matches!(
+            SupportedExtensions::try_from(Path::new("/book")),
+            Err(EbookErrors::NoExtensionError)
+        ));
 
-        assert_eq!(
-            Err(EbookErrors::NoExtensionError),
-            SupportedExtensions::try_from(Path::new("/"))
-        );
+        assert!(matches!(
+            SupportedExtensions::try_from(Path::new("/")),
+            Err(EbookErrors::NoExtensionError)
+        ));
 
-        assert_eq!(
-            Err(EbookErrors::UnsupportedExtensionError("jpeg".to_string())),
-            SupportedExtensions::try_from(Path::new("/book.jpeg"))
-        );
+        assert!(matches!(
+            SupportedExtensions::try_from(Path::new("/book.jpeg")),
+            Err(EbookErrors::UnsupportedExtensionError(ref ext)) if ext == "jpeg"
+        ));
     }
 }
