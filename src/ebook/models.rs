@@ -1,5 +1,5 @@
 use super::errors::EbookErrors;
-use std::fmt::{Display, write};
+use std::fmt::Display;
 use std::path::Path;
 #[derive(Debug, PartialEq)]
 pub enum SupportedExtensions {
