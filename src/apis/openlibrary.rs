@@ -13,7 +13,7 @@ pub async fn fetch_book_by_isbn(isbn: &String) -> Result<Book, ClientError> {
     let response = reqwest::get(&url).await?;
     let body = response.text().await?;
 
-    info!("Raw:{}", body);
+    debug!("Raw:{}", body);
 
     let response: OpenLibraryResponse = serde_json::from_str(&body)?;
 
@@ -39,9 +39,9 @@ mod tests {
         let isbn = &"9780141439600".to_string(); // Pride and Prejudice
         let book: Book = fetch_book_by_isbn(isbn).await.unwrap();
 
-        assert_eq!(book.title, "Pride and Prejudice");
-        let authors = book.authors;
+        assert_eq!(book.title, "A Tale of Two Cities");
+        let authors = book.author_name;
         assert!(!authors.is_empty());
-        assert_eq!("Jane Austen", authors.iter().next().unwrap().key);
+        assert_eq!("Charles Dickens", authors.iter().next().unwrap());
     }
 }

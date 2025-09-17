@@ -9,10 +9,5 @@ pub struct OpenLibraryResponse {
 #[derive(Deserialize, Debug)]
 pub struct Book {
     pub title: String,
-    pub authors: Vec<AuthorRef>,
-}
-
-#[derive(Deserialize, Debug)]
-pub struct AuthorRef {
-    pub key: String,
+    pub author_name: Vec<String>,
 }
