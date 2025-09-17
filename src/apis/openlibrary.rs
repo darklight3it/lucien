@@ -1,11 +1,12 @@
 use crate::apis::models::OpenLibraryResponse;
+use crate::ebook::models::ISBN;
 
 use super::errors::ClientErrors;
 use super::models::Book;
 
-pub async fn fetch_book_by_isbn(isbn: &String) -> Result<Book, ClientErrors> {
+pub async fn fetch_book_by_isbn(isbn: &ISBN) -> Result<Book, ClientErrors> {
     // Example: GET request to Open Library API
-    let url = format!("https://openlibrary.org/search.json?isbn={}", isbn);
+    let url = format!("https://openlibrary.org/search.json?isbn={}", isbn.get_id());
 
     // ? operator is returning the response and bubbling the error to the caller
     // internalerror is automatically deriving the Error from ClientError enum
