@@ -1,10 +1,9 @@
 use crate::apis::models::OpenLibraryResponse;
 
-use super::errors::ClientError;
+use super::errors::ClientErrors;
 use super::models::Book;
-use log::info;
 
-pub async fn fetch_book_by_isbn(isbn: &String) -> Result<Book, ClientError> {
+pub async fn fetch_book_by_isbn(isbn: &String) -> Result<Book, ClientErrors> {
     // Example: GET request to Open Library API
     let url = format!("https://openlibrary.org/search.json?isbn={}", isbn);
 
@@ -22,7 +21,7 @@ pub async fn fetch_book_by_isbn(isbn: &String) -> Result<Book, ClientError> {
     if let Some(doc) = response.docs.into_iter().next() {
         Ok(doc)
     } else {
-        Err(ClientError::Api {
+        Err(ClientErrors::Api {
             status: reqwest::StatusCode::NOT_FOUND,
             message: "Book not found".to_string(),
         })

@@ -1,23 +1,23 @@
 use std::path::Path;
 
-use crate::ebook::errors::EbookError;
+use super::errors::EbookErrors;
 #[derive(Debug, PartialEq)]
 pub enum SupportedExtensions {
     EPub,
 }
 
 impl TryFrom<&Path> for SupportedExtensions {
-    type Error = EbookError;
+    type Error = EbookErrors;
 
     fn try_from(path: &Path) -> Result<Self, Self::Error> {
         let extension = path
             .extension()
             .and_then(|ext| ext.to_str())
-            .ok_or(EbookError::NoExtensionError)?;
+            .ok_or(EbookErrors::NoExtensionError)?;
 
         match extension.to_lowercase().as_str() {
             "epub" => Ok(SupportedExtensions::EPub),
-            other => Err(EbookError::UnsupportedExtensionError(other.to_string())),
+            other => Err(EbookErrors::UnsupportedExtensionError(other.to_string())),
         }
     }
 }
@@ -34,17 +34,17 @@ mod tests {
         );
 
         assert_eq!(
-            Err(EbookError::NoExtensionError),
+            Err(EbookErrors::NoExtensionError),
             SupportedExtensions::try_from(Path::new("/book"))
         );
 
         assert_eq!(
-            Err(EbookError::NoExtensionError),
+            Err(EbookErrors::NoExtensionError),
             SupportedExtensions::try_from(Path::new("/"))
         );
 
         assert_eq!(
-            Err(EbookError::UnsupportedExtensionError("jpeg".to_string())),
+            Err(EbookErrors::UnsupportedExtensionError("jpeg".to_string())),
             SupportedExtensions::try_from(Path::new("/book.jpeg"))
         );
     }
