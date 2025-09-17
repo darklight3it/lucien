@@ -1,4 +1,5 @@
 use super::errors::EbookErrors;
+use std::fmt::{Display, write};
 use std::path::Path;
 #[derive(Debug, PartialEq)]
 pub enum SupportedExtensions {
@@ -28,7 +29,7 @@ pub struct ISBN {
 
 impl ISBN {
     pub const PREFIX: &'static str = "urn:isbn:";
-    fn new(raw: String) -> Self {
+    pub fn new(raw: String) -> Self {
         let id: String = raw
             .strip_prefix(ISBN::PREFIX)
             .unwrap_or(&raw)
@@ -39,8 +40,18 @@ impl ISBN {
         return Self { id };
     }
 
+    pub fn get_id(&self) -> &str {
+        return &self.id;
+    }
+
     fn get_long_id(&self) -> String {
         return format!("{}{}", ISBN::PREFIX, self.id);
+    }
+}
+
+impl Display for ISBN {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "({})", self.id)
     }
 }
 

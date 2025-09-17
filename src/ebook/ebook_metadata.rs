@@ -1,12 +1,25 @@
 use std::path::Path;
 
+use epub::doc::EpubDoc;
+
+use crate::ebook::models::ISBN;
+
 use super::{errors::EbookErrors, models::SupportedExtensions};
 
-pub fn extract_medatadata(path: &Path) -> Result<(), EbookErrors> {
-    if (path.is_file()) {
-        let extension = SupportedExtensions::try_from(path)?;
-        // supported extension is only epub at the moment, just going with the epub extraction method
-    }
+pub fn get_isbn(path: &Path) -> Result<ISBN, EbookErrors> {
+    let extension = SupportedExtensions::try_from(path)?;
+    return match extension {
+        SupportedExtensions::EPub => get_epub_isbn(path),
+    };
+}
 
-    todo!()
+fn get_epub_isbn(path: &Path) -> Result<ISBN, EbookErrors> {
+    let doc = EpubDoc::new(path)?;
+
+    let raw = doc.mdata("pub-id").or_else(|| doc.mdata("book-id"));
+
+    return match raw {
+        Some(r) => Ok(ISBN::new(r)),
+        None => Err(EbookErrors::ISBNNotFoundError()),
+    };
 }
