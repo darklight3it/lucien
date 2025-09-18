@@ -14,3 +14,4 @@ thiserror = "2.0.16"
 log = "0.4.28"
 simplelog = { version = "0.12.2", features = ["paris"] }
 epub = "2.1.4"
+mockall = "0.13.1"
