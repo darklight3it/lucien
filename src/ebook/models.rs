@@ -28,10 +28,8 @@ pub struct Isbn {
 }
 
 impl Isbn {
-    pub const PREFIX: &'static str = "urn:isbn:";
     pub fn new(raw: String) -> Self {
         let id: String = raw
-            .trim_start_matches(Isbn::PREFIX)
             .chars()
             .filter(|c| c.is_ascii_digit() || *c == 'X') // allow X for ISBN-10
             .collect();
@@ -59,11 +57,6 @@ mod test {
         assert_eq!(
             "9781492056478",
             Isbn::new("978-1-492-05647-8".to_string()).id
-        );
-
-        assert_eq!(
-            "9781492056478",
-            Isbn::new(format!("{}{}", Isbn::PREFIX, "978 - 1 - 492 - 05647 - 8")).id
         );
 
         assert_eq!(
