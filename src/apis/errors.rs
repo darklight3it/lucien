@@ -3,7 +3,7 @@ use serde_json::Error as SerdeError;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
-pub enum ClientErrors {
+pub enum ClientError {
     #[error("network error: {0}")]
     Network(#[from] reqwest::Error),
 

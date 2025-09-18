@@ -1,10 +1,10 @@
 use crate::apis::models::OpenLibraryResponse;
-use crate::ebook::models::ISBN;
+use crate::ebook::models::Isbn;
 
-use super::errors::ClientErrors;
+use super::errors::ClientError;
 use super::models::EbookMetadata;
 
-pub async fn fetch_ebook_metadata_by_isbn(isbn: &ISBN) -> Result<EbookMetadata, ClientErrors> {
+pub async fn fetch_ebook_metadata_by_isbn(isbn: &Isbn) -> Result<EbookMetadata, ClientError> {
     // Example: GET request to Open Library API
     let url = format!("https://openlibrary.org/search.json?isbn={}", isbn.get_id());
 
@@ -22,7 +22,7 @@ pub async fn fetch_ebook_metadata_by_isbn(isbn: &ISBN) -> Result<EbookMetadata, 
     if let Some(doc) = response.docs.into_iter().next() {
         Ok(doc)
     } else {
-        Err(ClientErrors::Api {
+        Err(ClientError::Api {
             status: reqwest::StatusCode::NOT_FOUND,
             message: "Book not found".to_string(),
         })
@@ -36,7 +36,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_fetch_book_by_isbn() {
-        let isbn = &ISBN::new("9780141439600".to_string()); // Pride and Prejudice
+        let isbn = &Isbn::new("9780141439600".to_string()); // Pride and Prejudice
         let book: EbookMetadata = fetch_ebook_metadata_by_isbn(isbn).await.unwrap();
 
         assert_eq!(book.title, "A Tale of Two Cities");

@@ -1,11 +1,8 @@
 use config::Config;
 use serde::Deserialize;
-use std::path::PathBuf;
 
 #[derive(Deserialize, Debug)]
-pub struct AppConfig {
-    pub metadata_index_path: PathBuf,
-}
+pub struct AppConfig {}
 
 pub fn load_config() -> Result<AppConfig, String> {
     let config = Config::builder()

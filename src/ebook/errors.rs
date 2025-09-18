@@ -2,13 +2,13 @@ use epub::doc::DocError;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
-pub enum EbookErrors {
+pub enum EbookError {
     #[error("file has no extension")]
-    NoExtensionError,
+    NoExtension,
     #[error("file extension {0} is not supported")]
-    UnsupportedExtensionError(String),
+    UnsupportedExtension(String),
     #[error("not able to read epub document: {0}")]
-    EpubDocError(#[from] DocError),
-    #[error("did not founf any ISBN")]
-    ISBNNotFoundError(),
+    EpubDoc(#[from] DocError),
+    #[error("did not found any ISBN in the file")]
+    ISBNNotFound(),
 }
