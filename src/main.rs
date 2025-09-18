@@ -27,7 +27,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     setup_logger();
 
-    let path = Path::new("src/tests/resources/test_book.epub");
+    let path = Path::new("tests/resources/test_book.epub");
 
     let isbn: Isbn = match get_isbn(path) {
         Ok(i) => {

@@ -31,8 +31,7 @@ impl Isbn {
     pub const PREFIX: &'static str = "urn:isbn:";
     pub fn new(raw: String) -> Self {
         let id: String = raw
-            .strip_prefix(Isbn::PREFIX)
-            .unwrap_or(&raw)
+            .trim_start_matches(Isbn::PREFIX)
             .chars()
             .filter(|c| c.is_ascii_digit() || *c == 'X') // allow X for ISBN-10
             .collect();
