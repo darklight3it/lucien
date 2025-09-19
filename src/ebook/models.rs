@@ -1,6 +1,14 @@
+use epub::doc::EpubDoc;
+use mockall::automock;
+
 use super::errors::EbookError;
+use std::collections::HashMap;
 use std::fmt::Display;
+use std::fs::File;
+use std::io::BufReader;
 use std::path::Path;
+
+// Supported Extensions
 #[derive(Debug, PartialEq)]
 pub enum SupportedExtensions {
     EPub,
@@ -21,6 +29,8 @@ impl TryFrom<&Path> for SupportedExtensions {
         }
     }
 }
+
+// Isbn
 
 #[derive(Debug, PartialEq)]
 pub struct Isbn {
@@ -45,6 +55,23 @@ impl Isbn {
 impl Display for Isbn {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "({})", self.id)
+    }
+}
+
+// EbookDoc
+#[automock]
+pub trait EbookDoc {
+    fn mdata(&self, key: &str) -> Option<String>;
+    fn metadata(&self) -> &HashMap<String, Vec<String>>;
+}
+
+impl EbookDoc for EpubDoc<BufReader<File>> {
+    fn mdata(&self, key: &str) -> Option<String> {
+        self.mdata(key)
+    }
+
+    fn metadata(&self) -> &HashMap<String, Vec<String>> {
+        &self.metadata
     }
 }
 

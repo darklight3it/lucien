@@ -9,6 +9,6 @@ pub enum EbookError {
     UnsupportedExtension(String),
     #[error("not able to read epub document: {0}")]
     EpubDoc(#[from] DocError),
-    #[error("did not found any ISBN in the file")]
+    #[error("could not find ISBN in ebook")]
     ISBNNotFound(),
 }
