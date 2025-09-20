@@ -1,5 +1,7 @@
 use epub::doc::EpubDoc;
 use mockall::automock;
+use once_cell::sync::Lazy;
+use regex::Regex;
 
 use super::errors::EbookError;
 use std::collections::HashMap;
@@ -31,6 +33,15 @@ impl TryFrom<&Path> for SupportedExtensions {
 }
 
 // Isbn
+// we only validate the isbn broadly without implementing checksum
+
+static ISBN10: Lazy<Regex> = Lazy::new(|| {
+    Regex::new(r"^(?i:(?:ISBN(?:-10)?:?\s*)?)\d{1,5}(?:[- ]?\d+){1,2}[- ]?[\dX]$").unwrap()
+});
+
+static ISBN13: Lazy<Regex> = Lazy::new(|| {
+    Regex::new(r"^(?i:(?:ISBN(?:-13)?:?\s*)?)97[89](?:[- ]?\d+){2,}[- ]?[\dX]$").unwrap()
+});
 
 #[derive(Debug, PartialEq)]
 pub struct Isbn {
@@ -38,17 +49,25 @@ pub struct Isbn {
 }
 
 impl Isbn {
-    pub fn new(raw: String) -> Self {
+    pub fn new(raw: &String) -> Result<Self, EbookError> {
+        if !Self::is_valid(raw) {
+            return Err(EbookError::InvalidIsbn(raw.to_string()));
+        }
+
         let id: String = raw
             .chars()
             .filter(|c| c.is_ascii_digit() || *c == 'X') // allow X for ISBN-10
             .collect();
 
-        Self { id }
+        Ok(Self { id })
     }
 
     pub fn get_id(&self) -> &str {
         &self.id
+    }
+
+    pub fn is_valid(raw: &String) -> bool {
+        ISBN10.is_match(raw) || ISBN13.is_match(raw)
     }
 }
 
@@ -83,16 +102,27 @@ mod test {
     fn test_isbn_constructor() {
         assert_eq!(
             "9781492056478",
-            Isbn::new("978-1-492-05647-8".to_string()).id
+            Isbn::new(&"978-1-492-05647-8".to_string())
+                .unwrap()
+                .get_id()
         );
 
         assert_eq!(
             "9781492056478",
-            Isbn::new("978-1-492-05647-8".to_string()).id
+            Isbn::new(&"978-1-492-05647-8".to_string())
+                .unwrap()
+                .get_id()
         );
 
-        assert_eq!("0198526636", Isbn::new("0-19-852663-6".to_string()).id);
-        assert_eq!("019852663X", Isbn::new("0-19-852663-X".to_string()).id);
+        assert_eq!(
+            "0198526636",
+            Isbn::new(&"0-19-852663-6".to_string()).unwrap().get_id()
+        );
+
+        assert_eq!(
+            "019852663X",
+            Isbn::new(&"0-19-852663-X".to_string()).unwrap().get_id()
+        );
     }
 
     #[test]

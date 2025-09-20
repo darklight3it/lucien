@@ -36,7 +36,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_fetch_book_by_isbn() {
-        let isbn = &Isbn::new("9780141439600".to_string()); // Pride and Prejudice
+        let isbn = &Isbn::new(&"9780141439600".to_string()).unwrap(); // Pride and Prejudice
         let book: EbookMetadata = fetch_ebook_metadata_by_isbn(isbn).await.unwrap();
 
         assert_eq!(book.title, "A Tale of Two Cities");

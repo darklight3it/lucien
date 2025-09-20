@@ -875,6 +875,8 @@ dependencies = [
  "epub",
  "log",
  "mockall",
+ "once_cell",
+ "regex",
  "reqwest",
  "serde",
  "serde_json",

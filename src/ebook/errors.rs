@@ -11,4 +11,6 @@ pub enum EbookError {
     EpubDoc(#[from] DocError),
     #[error("could not find ISBN in ebook")]
     ISBNNotFound(),
+    #[error("{0} is not a valid ISBN")]
+    InvalidIsbn(String),
 }
